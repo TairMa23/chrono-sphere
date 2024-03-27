@@ -21,8 +21,8 @@ export const fetchMyEventList = async(): Promise<MyEventList[]> => {
     })
 }
 
-export const addEventToMyEventList = async(track : Omit<MyEventList, 'id'>): Promise<DocumentData> => {
-    return await addDoc(myEvRef, track);
+export const addEventToMyEventList = async(event : Omit<MyEventList, 'id'>): Promise<DocumentData> => {
+    return await addDoc(myEvRef, event);
 }
 
 export const removeFromMyPlaylist = async(id: string): Promise<void> => {

@@ -1,107 +1,104 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Platform, Button, TextInput } from 'react-native';
+import { View, Text, TextInput, Button } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from "expo-status-bar";
-import styles from "../services/appStyle"
+import styles from "../services/appStyle";
 import { addEventToMyEventList } from "../services/eventListService";
-import { useMyevent } from "../store/useMyevent";
-import { useMutation } from "react-query";
 import { auth } from "../services/firebase-config";
-// const SelectDate = (props) => {
+
 const SelectDate = () => {
-  const [date, setDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [text, setText] = useState('Empty');
   const [title, setTitle] = useState('');
 
-  // const addEventToMyEventList = useMyevent((state) => state.addEventToMyEventList);
-  // const {mutate, isLoading, error} = useMutation(addTrackToMyPlaylist, {
-  //   onSuccess: (data) => {
-  //     const uid = auth.currentUser?.uid;
-  //     addEventToMyEventList({
-  //       uid,
-  //       ...props.enent
-  //     })
-  //   }
-  // })
+  const formatDate = (date) => {
+    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    const formattedTime = `${date.getHours()}:${date.getMinutes()}`;
+    return `${formattedDate} ${formattedTime}`;
+  };
 
+  const onChangeStartDate = (event, selectedDate) => {
+    const currentDate = selectedDate || startDate;
+    setStartDate(currentDate);
+    setText(formatDate(currentDate));
+  };
 
-  const onChange = (event, selectDate) => {
-    const currentDate = selectDate || date; // Corrected from selectedDate to selectDate
+  const onChangeEndDate = (event, selectedDate) => {
+    const currentDate = selectedDate || endDate;
+    setEndDate(currentDate);
+    setText(formatDate(currentDate));
+  };
 
-    setDate(currentDate);
+  const handleAddEvent = () => {
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+      console.log("User not logged in");
+      return;
+    }
 
-    let tempDate = new Date(currentDate);
-    let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1 + '/' + tempDate.getFullYear());
-    let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
-    setText(fDate + ' ' + fTime)
+    const newEvent = {
+      title: title,
+      startDate: startDate,
+      endDate: endDate,
+      uid: uid
+    };
 
-    console.log(date)
-  }
-
+    addEventToMyEventList(newEvent)
+      .then(() => {
+        console.log("Event added successfully!");
+        // Clear input fields or do other necessary actions after adding
+        setTitle('');
+        setStartDate(new Date());
+        setEndDate(new Date());
+        setText('Empty');
+      })
+      .catch((error) => {
+        console.error("Error adding event: ", error);
+      });
+  };
 
   return (
     <View style={styles.container}>
       <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{text}</Text>
       <View style={styles.rowContainer}>
         <Text>Title</Text>
-          <TextInput
-            placeholder="Title"
-            value={title}
-            onChangeText={val => setTitle(val)}
-            style={styles.t_input}
-          />
+        <TextInput
+          placeholder="Title"
+          value={title}
+          onChangeText={val => setTitle(val)}
+          style={styles.t_input}
+        />
       </View>
-      
+
       <View style={styles.rowContainer}>
         <Text>Start Date</Text>
         <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode="date"
+          testID="startDatePicker"
+          value={startDate}
+          mode="datetime"
           is24Hour={true}
           display='default'
-          onChange={onChange}
-        />
-      </View>
-      <View style={styles.rowContainer}>
-        <Text>Start Time</Text>
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode="time"
-          is24Hour={true}
-          display='default'
-          onChange={onChange}
+          onChange={onChangeStartDate}
         />
       </View>
 
       <View style={styles.rowContainer}>
         <Text>End Date</Text>
         <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode="date"
+          testID="endDatePicker"
+          value={endDate}
+          mode="datetime"
           is24Hour={true}
           display='default'
-          onChange={onChange}
+          onChange={onChangeEndDate}
         />
       </View>
-      <View style={styles.rowContainer}>
-        <Text>End Time</Text>
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode="time"
-          is24Hour={true}
-          display='default'
-          onChange={onChange}
-        />
-      </View>
-<Button title="add"/>
+
+      <Button title="Add" onPress={handleAddEvent} />
       <StatusBar style="auto" />
     </View>
   )
 }
-
 
 export default SelectDate;
