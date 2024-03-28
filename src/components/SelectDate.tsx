@@ -5,12 +5,23 @@ import { StatusBar } from "expo-status-bar";
 import styles from "../services/appStyle";
 import { addEventToMyEventList } from "../services/eventListService";
 import { auth } from "../services/firebase-config";
+import ModalMessage from "./ModelMessage"
+
 
 const SelectDate = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [text, setText] = useState('Empty');
   const [title, setTitle] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const showMessage = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   const formatDate = (date) => {
     const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
@@ -56,6 +67,7 @@ const SelectDate = () => {
       .catch((error) => {
         console.error("Error adding event: ", error);
       });
+    showMessage()
   };
 
   return (
@@ -96,6 +108,11 @@ const SelectDate = () => {
       </View>
 
       <Button title="Add" onPress={handleAddEvent} />
+      <ModalMessage
+        visible={modalVisible}
+        message="The event was successfully added👋"
+        onClose={closeModal}
+      />
       <StatusBar style="auto" />
     </View>
   )

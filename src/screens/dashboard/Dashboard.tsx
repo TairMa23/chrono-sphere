@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import styles from "../../services/appStyle"
@@ -10,7 +10,7 @@ const Dashboard = () => {
     const [selected, setSelected] = useState('');
     return (
         <View style={styles.container_app}>
-   
+           
             <Calendar
                 onDayPress={day => {
                     setSelected(day.dateString);
@@ -19,7 +19,8 @@ const Dashboard = () => {
                     [selected]: { selected: true, disableTouchEvent: true, selectedColor: 'orange' }
                 }}
             />
-                     <DropdownComponent />
+            <DropdownComponent />
+
         </View>
     )
 }

@@ -1,9 +1,23 @@
 import create from 'zustand';
 
 export interface MyEventList {
+    id: string;
+    endDate: {
+        dateString: string;
+        day: number;
+        month: number;
+        timestamp: number;
+        year: number;
+    };
+    startDate: {
+        dateString: string;
+        day: number;
+        month: number;
+        timestamp: number;
+        year: number;
+    };
     title: string;
-    startDate:Date;
-    endDate:Date;
+    uid: string;
 }
 
 interface MyEventListStore {
