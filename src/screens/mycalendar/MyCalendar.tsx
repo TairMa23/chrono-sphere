@@ -4,39 +4,35 @@ import { Calendar } from 'react-native-calendars';
 import styles from "../../services/appStyle";
 import PopUp from '../../components/PopUp';
 import { fetchMyEventList } from '../../services/eventListService';
+import { useEventListStore } from '../../store/useEventListStore';
+import { useMyevent } from '../../store/useMyevent';
 
 export default function MyCalendar() {
   const [selected, setSelected] = useState('');
-  const [events, setEvents] = useState({
-
-    // '2024-03-20': { selected: true, marked: true, selectedColor: 'blue' },
-    // '2024-03-23': { selected: true, marked: true, selectedColor: 'pink' },
-  });
+  const [events, setEvents] = useState({});
+  const setMyEventList = useMyevent((state) => state.setMyEventList);
+  const myEventList = useMyevent((state) => state.myeventList);
   useEffect(() => {
-    // Fetch events from Firestore when the component mounts
     const fetchEvents = async () => {
       try {
         const myEvents = await fetchMyEventList();
-
+        setMyEventList(myEvents)
         const markedEvents = {};
         myEvents.forEach(event => {
-          // console.log(".....myevent", JSON.stringify(event, null, 2));
-          console.log("event.date", event)
           markedEvents[event.startDate.dateString] = {
             selected: true,
             marked: true,
             selectedColor: 'green',
           };
         });
-        console.log("@@@@setevent:", markedEvents)
         setEvents(markedEvents);
       } catch (error) {
         console.error('Error fetching events:', error);
       }
     };
-
+    //console.log("add event")
     fetchEvents(); // Call the fetchEvents function
-  }, []);
+  }, [myEventList]);
 
 
   const addEvent = () => {
@@ -60,7 +56,7 @@ export default function MyCalendar() {
           padding: 30,
         }}
         onDayPress={day => {
-          console.log("day press: ",day.dateString)
+          console.log("day press: ", day.dateString)
           setSelected(day.dateString);
         }}
         markedDates={{

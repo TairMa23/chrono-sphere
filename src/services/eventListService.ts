@@ -16,7 +16,6 @@ export const fetchMyEventList = async (): Promise<MyEventList[]> => {
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map((doc) => {
         const data = doc.data() as MyEventList;
-        console.log("Ta----", data);
 
         // Convert startDate and endDate to the desired format
         const formattedStartDate = convertToDateObject(data.startDate);
