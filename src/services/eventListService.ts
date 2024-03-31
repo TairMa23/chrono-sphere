@@ -6,11 +6,20 @@ import { DocumentData, addDoc, collection, deleteDoc, doc, getDocs, query, where
 
 const myEvRef = collection(database, 'myeventList');
 
-export const fetchEventList = async(search: string): Promise<EventList[]> => {
-    const response = await axios.get(`https://itunes.apple.com/search?term=${search}`);
-    const eventList: EventList[] = response.data.results;
-    return eventList;
-}
+export const fetchMyEventListByUid = async (uid: string): Promise<MyEventList[]> => {
+    const q = query(myEvRef, where('uid', '==', uid));
+    const querySnapshot = await getDocs(q);
+    
+    return querySnapshot.docs.map((doc) => {
+        const data = doc.data() as MyEventList;
+        
+        // Convert startDate and endDate to the desired format
+        const formattedStartDate = convertToDateObject(data.startDate);
+        const formattedEndDate = convertToDateObject(data.endDate);
+        
+        return { ...data, id: doc.id, startDate: formattedStartDate, endDate: formattedEndDate };
+    });
+};
 export const fetchMyEventList = async (): Promise<MyEventList[]> => {
     const q = query(myEvRef, where('uid', '==', auth.currentUser?.uid));
     const querySnapshot = await getDocs(q);
@@ -47,9 +56,4 @@ const formatDate = (date: Date): string => {
 };
 export const addEventToMyEventList = async(event : Omit<MyEventList, 'id'>): Promise<DocumentData> => {
     return await addDoc(myEvRef, event);
-}
-
-export const removeFromMyPlaylist = async(id: string): Promise<void> => {
-    const useDoc = doc(database, 'myeventList', id);
-    await deleteDoc(useDoc);
 }

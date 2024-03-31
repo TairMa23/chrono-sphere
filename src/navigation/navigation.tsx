@@ -54,7 +54,7 @@ export const AppTabs = () => {
         name="myCalendarTabs" component={MyCalendar} />
       <AppBottomTabs.Screen
         options={{
-          tabBarLabel: "myGroups",
+          tabBarLabel: "CreateGroup",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons color={color} size={30} name="home-group" />
           ),

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Group } from "../store/useGroups";
+import { Group, GroupMember } from "../store/useGroups";
 import { auth, database } from './firebase-config';
 import { DocumentData, addDoc, collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore'
 
@@ -12,12 +12,14 @@ export const fetchGroupList = async (search: string): Promise<Group[]> => {
     return groupList;
 }
 
+
 export const fetchMyGroups = async (): Promise<Group[]> => {
-    const q = query(groupRef, where('uid', '==', auth.currentUser?.uid));
+    const q = query(groupRef, where('members', 'array-contains', auth.currentUser?.uid));
     const querySnapshot = await getDocs(q);
+
     return querySnapshot.docs.map((doc) => {
         const data = doc.data() as Group;
-        return { ...data, id: doc.id };
+        return { ...data, id: doc.id, members: data.members as GroupMember[] };
     });
 };
 

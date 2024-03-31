@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { TouchableOpacity, Button, Text, View, StyleSheet } from "react-native";
 import Modal from "react-native-modal";
-import SelectDate from "./SelectDate";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import SelectDateByGroup from "./SelectDateByGroup";
 
 function PopUp() {
     const [isModalVisible, setModalVisible] = useState(false);
@@ -20,7 +20,7 @@ function PopUp() {
             <Modal isVisible={isModalVisible}>
                 <View style={{ flex: 1 }}>
                     <Text>Hello!</Text>
-                    <SelectDate />
+                    <SelectDateByGroup />
                     <Button title="Hide modal" onPress={toggleModal} />
                 </View>
             </Modal>

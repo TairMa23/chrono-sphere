@@ -74,7 +74,15 @@ const MyGroups = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>My Groups</Text>
+            <Text style={styles.title}>Create Group</Text>
+            <Text style={styles.title1}>Welcome! Here you can create your group🌟 </Text>
+            <Text style={styles.title1}> Please provide me with the names of the participants and the name of the group you'd like to create. 🚀 </Text>
+            <TextInput
+                style={styles.input}
+                value={newGroupName}
+                onChangeText={setNewGroupName}
+                placeholder="Enter group name"
+            />
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
@@ -98,12 +106,7 @@ const MyGroups = () => {
                 )}
                 keyExtractor={(item) => item.uid}
             />
-            <TextInput
-                style={styles.input}
-                value={newGroupName}
-                onChangeText={setNewGroupName}
-                placeholder="Enter group name"
-            />
+          
             <TouchableOpacity
                 style={[styles.addButton, canCreateGroup ? styles.enabledButton : styles.disabledButton]}
                 onPress={handleCreateGroup}
@@ -119,10 +122,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        paddingTop: 80,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    title1: {
+        fontSize: 18,
         marginBottom: 20,
     },
     inputContainer: {

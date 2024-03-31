@@ -22,6 +22,9 @@ export const useGroups = create<GroupStore>((set) => ({
     groups: [],
     setGroups: (groups) => set({ groups }),
     addGroup: (group) => set((state) => ({ groups: [...state.groups, group] })),
+    getGroupByName: (name) => {
+        return state.groups.find(group => group.name === name);
+    },
     addMemberToGroup: (groupId, member) =>
         set((state) => ({
             groups: state.groups.map((group) =>
@@ -30,4 +33,5 @@ export const useGroups = create<GroupStore>((set) => ({
                     : group
             ),
         })),
+    
 }));
